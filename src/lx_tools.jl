@@ -54,6 +54,13 @@ function lxargs(s, fname="")
     return proc_args, proc_kwargs
 end
 
+"""
+    lxarg(c)
+
+For a LxCom, extract the first brace and process as function arguments.
+"""
+lxargs(lxc::Franklin.LxCom) = lxargs(lxproc(lxc), Franklin.getname(lxc))
+
 
 """
     lxmock(s)
