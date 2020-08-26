@@ -3,7 +3,7 @@
 [![Build Status](https://travis-ci.com/tlienart/FranklinUtils.jl.svg?branch=master)](https://travis-ci.com/tlienart/FranklinUtils.jl)
 [![Coverage](https://codecov.io/gh/tlienart/FranklinUtils.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/tlienart/FranklinUtils.jl)
 
-This package aims to simplify building plugins for [Franklin](https://github.com/tlienart/Franklin.jl) in particular the definition of
+This package aims to simplify building plugins for [Franklin](https://github.com/tlienart/Franklin.jl). In particular, the definition of
 
 * `hfun_*` (functions which will be called with `{{fname ...}}` either from Markdown or from HTML),
 * `lx_*` (functions which will be called with `\fname{...}` from Markdown only).
@@ -16,24 +16,24 @@ The present package will be particularly helpful for definitions of `lx_*` comma
 
 ### General user
 
-You should put the definition of the `lx_*` and `hfun_*` function in the `utils.jl` file.
+You should put `lx_*` and `hfun_*` functions in the `utils.jl` file.
 
-**Note**: the `utils.jl` file can itself load other packages or include other files.
+**Note**: the `utils.jl` file can itself load other packages and include other files.
 
 ### Package developper
 
-Say you're developping a package like `FranklinBootstrap`, then the corresponding module would export all `lx_*` and `hfun_*` definitions that you want to make available.
+Say you're developping a package like `FranklinBootstrap`. Then the corresponding module would export all `lx_*` and `hfun_*` definitions that you want to make available.
 
 Users of your package should then just add in their `utils.jl` file either:
 
-```
+```jl
 using FranklinBootstrap
 ```
 
 or
 
-```
-import FranklinBootstrap: lx_fun1, lx_fun2, hfun_3
+```jl
+using FranklinBootstrap: lx_fun1, lx_fun2, hfun_3
 ```
 
 depending on whether they want a finer control over what they want to use (the former should be preferred).
@@ -42,9 +42,9 @@ depending on whether they want a finer control over what they want to use (the f
 ## Defining `hfun_*`
 
 Let's say we want to define a function `hfun_foo` which will be called `{{foo ...}}`.
-To define such a function, we must write:
+To define such function, we must write:
 
-```
+```jl
 function hfun_foo(...)::String
     # definition
     return html_string
@@ -60,7 +60,7 @@ that function **must** return a (possibly empty) String which is expected to be 
 You could have a function without argument which would then be called `{{foo}}`.
 For this, without surprise, just leave the arguments empty in the definition:
 
-```
+```jl
 function hfun_foo()::String
     # definition
     return html_string
@@ -79,20 +79,20 @@ The _expected_ workflow is:
 
 In all cases, the definition must now look like
 
-```
+```jl
 function hfun_foo(args::Vector{String})::String
     # definition
     return html_string
 end
 ```
 
-the difference will lie in how you process the `args`.
+The difference will lie in how you process the `args`.
 
 ### Access to page variables
 
 In both `hfun_*` and `lx_*` function you have access to the page variables defined on the page which calls the function and to page variables defined on other pages.
 
-To access _local_ page variables, call `locvar("$name_of_var")`, to access a page variable defined on another page, call `pagevar("$relative_path", "$name_of_var")` where `$relative_path` is the path to the page that defines the variable.
+To access _local_ page variables, call `locvar("name_of_var")`, to access a page variable defined on another page, call `pagevar("relative_path", "name_of_var")` where `relative_path` is the path to the page that defines the variable.
 In both case, if the variable is not found then `nothing` is returned.
 
 **Example**: page `bish/blah.md` defines `var1`, you can access it via `locvar("var1")` for any function called on `blah.md` and via `pagevar("bish/blah")` anywhere else.
@@ -111,7 +111,7 @@ In file `blah.md`
 
 In file `utils.jl`
 
-```
+```jl
 function hfun_foo()
     return "<h1>Hello!</h1>"
 end
@@ -128,7 +128,7 @@ In file `blah.md`
 
 In file `utils.jl`
 
-```
+```jl
 function hfun_foo(args)
     vname = args[1]
     val = locvar(vname)
@@ -140,14 +140,12 @@ function hfun_foo(args)
 end
 ```
 
----
-
 ## Defining `lx_*`
 
 Let's say we want to define a function `lx_bar` which will be called `\bar{...}`.
-To define such a function, we must write:
+To define such function, we must write:
 
-```
+```jl
 function lx_bar(lxc, lxd)::String
     # definition
     return markdown_string
@@ -163,7 +161,7 @@ that function **must** return a (possibly empty) String which is expected to be 
 
 The **recommended** workflow is to use the `lxargs` function from `FranklinUtils` to read the content of the first brace as if it was the arguments passed to a Julia function:
 
-```
+```jl
 function lx_bar(lxc, _)
     args, kwargs = lxargs(lxc)
     # work with args, kwargs
