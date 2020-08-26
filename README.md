@@ -9,7 +9,7 @@ This package aims to simplify building plugins for [Franklin](https://github.com
 * `lx_*` (functions which will be called with `\fname{...}` from Markdown only).
 
 **Which one should you use?**: both can be useful, as a rough guideline, `hfun_*` are simpler and `lx_*` are more flexible.
-If you would like to build a plugin package (e.g.: something like [FranklinBootstrap.jl](ADD_LINK_HERE) which makes it easy to work with Bootstrap), you should generally prefer `lx_*` as they will offer more flexibility, particularly in dealing with arguments etc.
+If you would like to build a plugin package (e.g.: something like [FranklinBootstrap.jl](https://github.com/zdroid/FranklinBootstrap.jl) which makes it easy to work with Bootstrap), you should generally prefer `lx_*` as they will offer more flexibility, particularly in dealing with arguments etc.
 The present package will be particularly helpful for definitions of `lx_*` commands.
 
 ## Where to put definitions
