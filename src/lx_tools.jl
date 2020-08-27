@@ -1,7 +1,7 @@
 """
     lxd(n)
 
-
+Create a dummy latex definition (useful for testing).
 """
 lxd(n) = F.LxDef("\\" * n, 1, F.subs(""))
 
