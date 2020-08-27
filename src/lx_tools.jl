@@ -1,4 +1,11 @@
 """
+    lxd(n)
+
+
+"""
+lxd(n) = F.LxDef("\\" * n, 1, F.subs(""))
+
+"""
     lxproc(com)
 
 Extract the content of a single-brace lx command. For instance `\\com{foo}`
@@ -55,11 +62,11 @@ function lxargs(s, fname="")
 end
 
 """
-    lxarg(c)
+    lxarg(com)
 
 For a LxCom, extract the first brace and process as function arguments.
 """
-lxargs(lxc::Franklin.LxCom) = lxargs(lxproc(lxc), Franklin.getname(lxc))
+lxargs(com::F.LxCom) = lxargs(lxproc(com), F.getname(com))
 
 
 """
@@ -73,7 +80,7 @@ function lxmock(s)
     empty!(F.GLOBAL_LXDEFS)
     # create a dummy command with the name
     name = match(r"\\(.*?)\{", s).captures[1]
-    F.GLOBAL_LXDEFS[name] = F.LxDef("\\" * name, 1, F.subs(""))
+    F.GLOBAL_LXDEFS[name] = lxd(name)
     # parse looking for the comand
     tokens = F.find_tokens(s, F.MD_TOKENS, F.MD_1C_TOKENS)
     blocks, tokens = F.find_all_ocblocks(tokens, F.MD_OCB2)
