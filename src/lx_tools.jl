@@ -6,13 +6,12 @@ Create a dummy latex definition (useful for testing).
 lxd(n) = F.LxDef("\\" * n, 1, F.subs(""))
 
 """
-    lxproc(com)
+    lxopts(com)
 
 Extract the content of a single-brace lx command. For instance `\\com{foo}`
 would be extracted to `foo`.
 """
 lxproc(com) = F.content(com.braces[1])
-
 
 """
     lxargs(s)
@@ -33,7 +32,7 @@ function lxargs(s, fname="")
     try
         args = Meta.parse(s).args
     catch
-        error("A \\$fname{...} had improper specs:\n$s; verify.")
+        error("A command/env $fname had improper options:\n$s; verify.")
     end
     i = findfirst(e -> isa(e, Expr), args)
     if isnothing(i)
@@ -53,7 +52,7 @@ function lxargs(s, fname="")
         end
     end
     for kwarg in cand_kwargs
-        kwarg isa Expr || error("In \\$fname{...}, expected arguments " *
+        kwarg isa Expr || error("In command/env $fname, expected arguments " *
                                 "followed by keyword arguments but got: " *
                                 "$s; verify.")
         push!(proc_kwargs, kwarg.args[1] => kwarg.args[2])
@@ -66,7 +65,7 @@ end
 
 For a LxCom, extract the first brace and process as function arguments.
 """
-lxargs(com::F.LxCom) = lxargs(lxproc(com), F.getname(com))
+lxargs(com::F.LxObj) = lxargs(lxproc(com), F.getname(com))
 
 
 """
