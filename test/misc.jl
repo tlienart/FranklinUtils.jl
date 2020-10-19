@@ -1,5 +1,5 @@
 @testset "html" begin
-    @test html("aaa") == "\n~~~aaa~~~\n"
+    @test html("aaa") == "~~~aaa~~~"
 end
 
 @testset "isapproxstr" begin

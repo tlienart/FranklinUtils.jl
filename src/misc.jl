@@ -4,7 +4,7 @@
 Mark a string as HTML to be included in Franklin-markdown. Line spacing is
 to reduce issues with `<p>`.
 """
-html(s) = "\n~~~$s~~~\n"
+html(s) = "~~~$s~~~"
 
 
 """
