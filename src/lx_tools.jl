@@ -6,7 +6,7 @@ Create a dummy latex definition (useful for testing).
 lxd(n) = F.LxDef("\\" * n, 1, F.subs(""))
 
 """
-    lxopts(com)
+    lxproc(com)
 
 Extract the content of a single-brace lx command. For instance `\\com{foo}`
 would be extracted to `foo`.

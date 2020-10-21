@@ -6,7 +6,7 @@ const F = Franklin
 # misc
 export html, isapproxstr
 # lx_tools
-export lxd, lxproc, lxopts, lxargs, lxmock
+export lxd, lxproc, lxargs, lxmock
 
 include("misc.jl")
 include("lx_tools.jl")
