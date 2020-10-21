@@ -12,6 +12,19 @@ This package aims to simplify building plugins for [Franklin](https://github.com
 If you would like to build a plugin package (e.g.: something like [FranklinBootstrap.jl](https://github.com/tlienart/FranklinBootstrap.jl) which makes it easy to work with Bootstrap), you should generally prefer `lx_*` as they will offer more flexibility, particularly in dealing with arguments etc.
 The present package will be particularly helpful for definitions of `lx_*` commands.
 
+## What this package exports
+
+**main**
+* `lxproc` extract the content of a single-brace lx command/environment (returns the string contained in the first brace)
+* `lxargs` same as `lxproc` except it treats the string as a Julia function treats its arguments, returns `args, kwargs`. This allows options passed as `{1, 2, opt="hello", bar=true}`. Typically you'll want to use `kwargs` to keep things clear.
+
+**other**
+* `html` a dummy function to wrap something in `~~~`
+* `isapproxstr` a dummy function to compare two strings ignoring `\s` chars
+* `lxd` create a dummy latex definition (for testing)
+
+
+
 ## Where to put definitions
 
 ### General user
