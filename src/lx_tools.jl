@@ -55,7 +55,11 @@ function lxargs(s, fname="")
         kwarg isa Expr || error("In command/env $fname, expected arguments " *
                                 "followed by keyword arguments but got: " *
                                 "$s; verify.")
-        push!(proc_kwargs, kwarg.args[1] => kwarg.args[2])
+        v = kwarg.args[2]
+        if v isa Expr
+            v = eval(v)
+        end
+        push!(proc_kwargs, kwarg.args[1] => v)
     end
     return proc_args, proc_kwargs
 end
