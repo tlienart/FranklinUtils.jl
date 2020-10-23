@@ -34,7 +34,14 @@ function lxargs(s, fname="")
     catch
         error("A command/env $fname had improper options:\n$s; verify.")
     end
-    i = findfirst(e -> isa(e, Expr), args)
+    # unpack if multiple kwargs are given
+    if !isempty(args) && args[1] isa Expr && args[1].head == :parameters
+        nokw = args[2:end]
+        args = [nokw..., args[1].args...]
+        i = length(nokw) + 1
+    else
+        i = findfirst(e -> isa(e, Expr) && e.head in (:(=), :parameters), args)
+    end
     if isnothing(i)
         cand_args = args
         cand_kwargs = []
@@ -47,14 +54,17 @@ function lxargs(s, fname="")
     for arg in cand_args
         if arg isa QuoteNode
             push!(proc_args, arg.value)
+        elseif arg isa Expr
+            push!(proc_args, eval(arg))
         else
             push!(proc_args, arg)
         end
     end
+    all(e -> e isa Expr, cand_kwargs) || error("""
+        In command/env $fname, expected arguments followed by keyword arguments but got:
+        $s; verify.""")
+    cand_kwargs = map(e -> e.head == :parameters ? e.args : e, cand_kwargs)
     for kwarg in cand_kwargs
-        kwarg isa Expr || error("In command/env $fname, expected arguments " *
-                                "followed by keyword arguments but got: " *
-                                "$s; verify.")
         v = kwarg.args[2]
         if v isa Expr
             v = eval(v)
@@ -92,4 +102,52 @@ function lxmock(s)
     lxcoms, _ = F.find_lxcoms(tokens, lxdefs, braces)
     # return the lxcom
     return lxcoms[1]
+end
+
+"""
+    @lx
+
+Streamlines the creation of a "latex-function".
+"""
+macro lx(defun)
+    def   = splitdef(defun)
+    name  = def[:name]
+    body  = def[:body]
+    name_ = String(name)
+    lxn_  = Symbol("lx_$(name)")
+    fbn_  = Symbol("_lx_$(name)")
+
+    def[:name] = fbn_
+    ex = quote
+        eval(FranklinUtils.combinedef($def))
+        function $lxn_(c, _)
+            a, kw = lxargs(lxproc(c), $name_)
+            return $fbn_(a...; kw...)
+        end
+    end
+    esc(ex)
+end
+
+"""
+    @env
+
+Same as [`@lx`](@ref) but for environments
+"""
+macro env(defun)
+    def   = splitdef(defun)
+    name  = def[:name]
+    body  = def[:body]
+    name_ = String(name)
+    lxn_  = Symbol("env_$(name)")
+    fbn_  = Symbol("_env_$(name)")
+
+    def[:name] = fbn_
+    ex = quote
+        eval(FranklinUtils.combinedef($def))
+        function $lxn_(e, _)
+            _, kw = lxargs(lxproc(e), $name_)
+            return $fbn_(Franklin.content(e); kw...)
+        end
+    end
+    esc(ex)
 end

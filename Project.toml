@@ -1,9 +1,10 @@
 name = "FranklinUtils"
 uuid = "dcd8a645-c81d-482f-af4b-568f72f3e16d"
 authors = ["tlienart <tlienart@me.com>"]
-version = "0.3.3"
+version = "0.3.4"
 
 [deps]
+ExprTools = "e2ba6199-217a-4e67-a87a-7c52f15ade04"
 Franklin = "713c75ef-9fc9-4b05-94a9-213340da978e"
 
 [compat]
