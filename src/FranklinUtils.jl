@@ -6,7 +6,7 @@ const F = Franklin
 import ExprTools: splitdef, combinedef
 
 # misc
-export html, isapproxstr
+export html, isapproxstr, hfun_requiredfill
 # lx_tools
 export lxd, lxproc, lxargs, lxmock, @lx, @env
 
