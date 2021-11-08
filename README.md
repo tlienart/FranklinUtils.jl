@@ -165,7 +165,7 @@ function lx_bar(lxc, lxd)::String
 end
 ```
 
-that function **must** return a (possibly empty) String which is expected to be in HTML format.
+that function **must** return a (possibly empty) String which is expected to be in Markdown format.
 
 ### Arguments
 
